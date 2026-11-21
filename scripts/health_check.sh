@@ -2,11 +2,11 @@
 set -euo pipefail
 
 DISK_THRESHOLD="${1:-85}"
-LOG_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../logs" && pwd)"
+RAW_LOG_DIR="$(dirname "${BASH_SOURCE[0]}")/../logs"
+mkdir -p "$RAW_LOG_DIR"
+LOG_DIR="$(cd "$RAW_LOG_DIR" && pwd)"
 LOG_FILE="${LOG_DIR}/health.log"
 TIMESTAMP="$(date '+%Y-%m-%d %H:%M:%S %Z')"
-
-mkdir -p "$LOG_DIR"
 
 DISK_USAGE="$(df -P / | awk 'NR==2 {gsub("%", "", $5); print $5}')"
 MEM_USAGE="$(free -m 2>/dev/null | awk '/^Mem:/ {printf "%.0f", ($3/$2)*100}' || true)"
